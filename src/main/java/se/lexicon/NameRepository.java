@@ -1,5 +1,7 @@
 package se.lexicon;
 
+import java.util.Arrays;
+
 /**
  * The NameRepository class provides methods to manage a list of names.
  * It offers functionalities such as adding, removing, finding, and updating names.
@@ -15,8 +17,7 @@ public class NameRepository {
      * @return The number of elements in the names array.
      */
     public static int getSize() {
-        //todo: PART 1: implement getSize method
-        return 0;
+        return names.length;
     }
 
 
@@ -26,7 +27,7 @@ public class NameRepository {
      * @param names The array of names to set.
      */
     public static void setNames(final String[] names) {
-        //todo: PART 1: implement setNames method
+        NameRepository.names = names;
     }
 
 
@@ -34,7 +35,7 @@ public class NameRepository {
      * Clears the names array by creating a new empty array.
      */
     public static void clear() {
-        //todo: PART 1: implement clear method
+        NameRepository.names = new String[0];
     }
 
 
@@ -44,8 +45,11 @@ public class NameRepository {
      * @return A new array containing all elements from the names array.
      */
     public static String[] findAll() {
-        //todo: PART 1: implement findAll method
-        return null;
+        String[] newNames = new String[NameRepository.names.length];
+        for (int i = 0; i < newNames.length; i++) {
+            newNames[i] = NameRepository.names[i];
+        }
+        return newNames;
     }
 
 
@@ -56,7 +60,12 @@ public class NameRepository {
      * @return The matching name if found; otherwise, null.
      */
     public static String find(final String fullName) {
-        //todo: PART 2: implement find method
+
+        for (int i = 0; i < NameRepository.names.length; i++) {
+            if (NameRepository.names[i].equalsIgnoreCase(fullName)) {
+                return NameRepository.names[i];
+            }
+        }
         return null;
     }
 
@@ -68,7 +77,15 @@ public class NameRepository {
      * @return True if the fullName is added successfully; false if it already exists.
      */
     public static boolean add(final String fullName) {
-        //todo: PART 2: implement add method
+        if (NameRepository.find(fullName) == null) {
+            String[] newNames = new String[NameRepository.names.length + 1];
+            for (int i = 0; i < NameRepository.names.length; i++) {
+                newNames[i] = NameRepository.names[i];
+            }
+            newNames[newNames.length - 1] = fullName;
+            NameRepository.names = newNames;
+            return true;
+        }
         return false;
     }
 
@@ -80,8 +97,16 @@ public class NameRepository {
      * @return An array containing all matching names.
      */
     public static String[] findByFirstName(final String firstName) {
-        //todo: PART 3: findByFirstName method
-        return null;
+        String[] result = new String[0];
+        for (int i = 0; i < NameRepository.names.length; i++) {
+            if (NameRepository.names[i].substring(0, NameRepository.names[i].indexOf(" ")).equalsIgnoreCase(firstName)) {
+                // System.arraycopy(result, 0, result, result.length+1, result.length+1);
+                result = Arrays.copyOf(result,result.length + 1);
+                result[result.length-1]=NameRepository.names[i];
+
+            }
+        }
+        return result;
     }
 
 
@@ -92,8 +117,14 @@ public class NameRepository {
      * @return An array containing all matching names.
      */
     public static String[] findByLastName(final String lastName) {
-        //todo: PART 3: implement findByLastName method
-        return null;
+        String[] result = new String[0];
+        for (int i = 0; i < NameRepository.names.length; i++) {
+            if (NameRepository.names[i].substring(NameRepository.names[i].indexOf(" ")+1).equalsIgnoreCase(lastName)) {
+                result = Arrays.copyOf(result,result.length + 1);
+                result[result.length-1]=NameRepository.names[i];
+            }
+        }
+        return result;
     }
 
 
@@ -105,7 +136,12 @@ public class NameRepository {
      * @return True if the name is updated successfully; false if the updated name already exists or the original name is not found.
      */
     public static boolean update(final String original, final String updatedName) {
-        //todo: PART 3: implement update method
+        for (int i = 0; i < NameRepository.names.length; i++) {
+            if (NameRepository.names[i].equalsIgnoreCase(original)) {
+              NameRepository.names[i]=updatedName;
+                return true;
+            }
+        }
         return false;
     }
 
@@ -117,8 +153,24 @@ public class NameRepository {
      * @return True if the name is removed successfully; false if the name is not found in the array.
      */
     public static boolean remove(final String fullName) {
-        //todo: PART 4: implement remove method
-        return false;
+        int index = -1;
+        for (int i = 0; i < NameRepository.names.length; i++) {
+            if (NameRepository.names[i].equalsIgnoreCase(fullName)) {
+                System.out.println("ind" + i);
+                index = i;
+                break;
+            }
+        }
+        if (index == -1) {
+            return false;
+        }
+        String[] temp = new String[names.length - 1];
+        System.arraycopy(names, 0, temp, 0, index);
+        System.arraycopy(names, +1, temp, index, names.length - index - 1);
+        NameRepository.names = temp;
+
+        return true;
+
     }
 
 
